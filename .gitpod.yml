@@ -3,8 +3,6 @@ image:
 
 tasks:
   - name: Shopware
-    before: |
-      # echo 'alias admin-watch="APP_URL=http://localhost:8000 composer run watch:admin"' >> ~/.bashrc
     init: |
       echo 'yo'
     command: |
