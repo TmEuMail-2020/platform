@@ -68,9 +68,6 @@ jetbrains:
     - de.espend.idea.php.annotation
   phpstorm:
     vmoptions: "-Xmx4g"
-    prebuilds:
-      version: stable
-
 vscode:
   extensions:
     - bmewburn.vscode-intelephense-client
