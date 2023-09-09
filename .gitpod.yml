@@ -1,13 +1,13 @@
 # == README ===
-#   PROBLEM: 
+#   PROBLEM:
 #     when using gitpod with web IDE like vscode or browser-terminal, then if use remote port prepended urls (`gp ports list`), you will see
 #     "Unable to find a matching sales channel for the request: "...". Please make sure the domain mapping is correct"
-#   SOLUTION: 
+#   SOLUTION:
 #     MUST use gitpod local companion, then use http://localhost:8000/admin (must go admin!)
 #       then add "sales channel" (default admin user/password: admin/shopware)
 #       then http://localhost:8000 will work
-#   Reference 
-#     https://docs.dockware.io/use-dockware/default-credentials 
+#   Reference
+#     https://docs.dockware.io/use-dockware/default-credentials
 #     https://beamtic.com/unable-to-find-a-matching-sales-channel-shopware
 #     https://www.gitpod.io/docs/references/ides-and-editors/browser-terminal
 #     https://www.gitpod.io/docs/references/ides-and-editors/local-companion#gitpod-local-companion
@@ -20,12 +20,10 @@ tasks:
     before: |
       echo 'alias admin-watch="APP_URL=http://localhost:8000 composer run watch:admin"' >> ~/.bashrc
     init: |
-      docker pull mysql:8
-      docker pull ghcr.io/shyim/shopware-docker/adminer
-      composer config --global github-oauth.github.com $(printf '%s\n' host=github.com | gp credential-helper get | sort | head -2 | tail -1 | sed 's;password=;;')
-      composer install
       docker run --restart always -d --name=mysql -p 127.0.0.1:3306:3306 -e MYSQL_ROOT_PASSWORD=root mysql:8
       docker run --restart always -d --name=adminer --link mysql:mysql -p 5000:8080 -e ADMINER_DESIGN=pepa-linha -e ADMINER_DEFAULT_SERVER=mysql -e ADMINER_PLUGINS="tables-filter table-structure json-column version-noverify" ghcr.io/shyim/shopware-docker/adminer
+      composer config --global github-oauth.github.com $(printf '%s\n' host=github.com | gp credential-helper get | sort | head -2 | tail -1 | sed 's;password=;;')
+      composer install
       ./bin/console system:setup -n --database-url "mysql://root:root@127.0.0.1:3306/shopware" --app-url "$(gp url 8000)" --app-env dev
       # Setup Trusted Proxies
       echo "TRUSTED_PROXIES=192.168.0.0/16" >> .env
@@ -33,18 +31,7 @@ tasks:
       
       ./bin/console framework:demodata --products 300 -e prod
       ./bin/console dal:refresh:index -e prod
-    command: | 
-      # prebuild docker containers persist to command phase, hence just simply docker start, no need to docker run
-      #   also all db seeding work persist to this phase, nice! 
-      docker start mysql
-      docker start adminer
-      ./bin/console system:setup -n --database-url "mysql://root:root@127.0.0.1:3306/shopware" --app-url "$(gp url 8000)" --app-env dev
-      # Setup Trusted Proxies
-      echo "TRUSTED_PROXIES=192.168.0.0/16" >> .env
-      composer run setup
-      
-      ./bin/console framework:demodata --products 300 -e prod
-      ./bin/console dal:refresh:index -e prod
+    command: |
       # Gitpod registers the ports on first docker command
       docker ps
       
@@ -87,13 +74,14 @@ ports:
 
 jetbrains:
   plugins:
-    # tmy plugins
+    # from Tommy
     - com.intellij.lang.jsgraphql
     - org.sonarlint.idea
     - com.intellij.ml.llm
     - com.sourcegraph.jetbrains
     - com.github.lppedd.idea-conventional-commit
-    # from shopware repo 
+
+    # from shopware/platform
     - com.jetbrains.php
     - com.intellij.php.tools.quality.phpstan
     - com.intellij.php.psalm
@@ -105,6 +93,9 @@ jetbrains:
     - de.espend.idea.php.annotation
   phpstorm:
     vmoptions: "-Xmx4g"
+      # causing prebuild hang as of (9-Sep-2023T11-42+0200), hence comment out
+      #prebuilds:
+      #version: stable
 
 vscode:
   extensions:
