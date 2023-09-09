@@ -93,9 +93,9 @@ jetbrains:
     - de.espend.idea.php.annotation
   phpstorm:
     vmoptions: "-Xmx4g"
-      # causing prebuild hang as of (9-Sep-2023T11-42+0200), hence comment out
-      #prebuilds:
-      #version: stable
+    #causing prebuild hang as of (9-Sep-2023T11-42+0200), hence comment out
+    #prebuilds:
+    #version: stable
 
 vscode:
   extensions:
