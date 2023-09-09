@@ -1,3 +1,17 @@
+# == README ===
+#   PROBLEM: 
+#     when using gitpod with web IDE like vscode or browser-terminal, then if use remote port prepended urls (`gp ports list`), you will see
+#     "Unable to find a matching sales channel for the request: "...". Please make sure the domain mapping is correct"
+#   SOLUTION: 
+#     MUST use gitpod local companion, then use http://localhost:8000/admin (must go admin!)
+#       then add "sales channel" (default admin user/password: admin/shopware)
+#       then http://localhost:8000 will work
+#   Reference 
+#     https://docs.dockware.io/use-dockware/default-credentials 
+#     https://beamtic.com/unable-to-find-a-matching-sales-channel-shopware
+#     https://www.gitpod.io/docs/references/ides-and-editors/browser-terminal
+#     https://www.gitpod.io/docs/references/ides-and-editors/local-companion#gitpod-local-companion
+
 image:
   file: .gitpod.Dockerfile
 
