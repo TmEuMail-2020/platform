@@ -20,6 +20,8 @@ tasks:
       ./bin/console framework:demodata --products 300 -e prod
       ./bin/console dal:refresh:index -e prod
     command: | 
+      # prebuild docker containers persist to command phase, hence just simply docker start, no need to docker run
+      #   also all db seeding work persist to this phase, nice! 
       docker start mysql
       docker start adminer
       ./bin/console system:setup -n --database-url "mysql://root:root@127.0.0.1:3306/shopware" --app-url "$(gp url 8000)" --app-env dev
@@ -71,6 +73,13 @@ ports:
 
 jetbrains:
   plugins:
+    # tmy plugins
+    - com.intellij.lang.jsgraphql
+    - org.sonarlint.idea
+    - com.intellij.ml.llm
+    - com.sourcegraph.jetbrains
+    - com.github.lppedd.idea-conventional-commit
+    # from shopware repo 
     - com.jetbrains.php
     - com.intellij.php.tools.quality.phpstan
     - com.intellij.php.psalm
